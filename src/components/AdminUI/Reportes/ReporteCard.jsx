@@ -13,10 +13,7 @@ function ReporteCard({ reporte }) {
   };
 
   return (
-    <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg" 
-      style={{ transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
-    >
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {/* Imagen del reporte */}
       <img 
         src={reporte.photo_url} 
@@ -36,7 +33,7 @@ function ReporteCard({ reporte }) {
         {/* Estado del reporte */}
         <div className="mb-4">
           <span 
-            className={`text-sm font-semibold ${reporte.status === 'PENDING' ? 'text-yellow-500' : reporte.status === 'APPROVED' ? 'text-green-500' : 'text-red-500'}`}
+            className={`text-sm font-semibold ${reporte.status === 'PENDING' ? 'text-yellow-500' :reporte.status === 'SOLVED' ? 'text-green-500' : reporte.status === 'APPROVED' ? 'text-green-500' : 'text-red-500'}`}
           >
             Estado: {estadoEnEspanol[reporte.status] || 'Estado desconocido'}
           </span>
