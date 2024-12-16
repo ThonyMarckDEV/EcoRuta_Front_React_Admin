@@ -34,7 +34,7 @@ function ReporteModal({ reporte, closeModal }) {
 
         {/* Mapa de Google dentro del modal */}
         <div className="mb-4" style={{ height: '120px', width: '100%' }}>
-          <LoadScript googleMapsApiKey="AIzaSyA6P_Wa2HJ6kPRLmJssViwfm0JsIL9KWeo">
+          <LoadScript googleMapsApiKey="AIzaSyCYaNAZ2nK7AWeZ8oukyGwuucAdmK3M5XY">
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={center}
