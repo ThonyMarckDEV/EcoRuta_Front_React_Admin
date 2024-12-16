@@ -9,10 +9,14 @@ function ReporteCard({ reporte }) {
     'PENDING': 'Pendiente',
     'APPROVED': 'Aprobado',
     'REJECTED': 'Rechazado',
+    'SOLVED': 'Solucionado',
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div 
+      className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg" 
+      style={{ transition: 'transform 0.3s ease, box-shadow 0.3s ease' }}
+    >
       {/* Imagen del reporte */}
       <img 
         src={reporte.photo_url} 

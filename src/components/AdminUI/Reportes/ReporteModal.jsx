@@ -23,7 +23,7 @@ function ReporteModal({ reporte, closeModal }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
-      <div className="bg-white p-8 rounded-lg w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2">
+      <div className="bg-white p-8 rounded-lg w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 relative">
         {/* Botón de cierre dentro del modal */}
         <button
           onClick={closeModal}
