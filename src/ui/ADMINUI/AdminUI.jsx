@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signOut } from 'firebase/auth';
-import { auth } from './firebase'; // Asegúrate de importar tu instancia de auth de Firebase
+import { auth } from '../../js/firebase'; // Asegúrate de importar tu instancia de auth de Firebase
 
 function AdminUI() {
   const handleLogout = async () => {
