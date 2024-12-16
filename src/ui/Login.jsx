@@ -19,34 +19,37 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  // Verificar si el correo existe en el backend usando parámetros de consulta
   const verifyEmailExistence = async (email) => {
     try {
       // Crear los parámetros de la URL con URLSearchParams
       const url = new URL(`${API_BASE_URL}api/v1/systemUsers/findByEmail`);
       url.search = new URLSearchParams({ email }).toString(); // Agregar el parámetro email a la URL
-
+  
       // Realizar la solicitud GET con la URL que contiene los parámetros
       const response = await fetch(url, {
         method: 'GET',
-        "ngrok-skip-browser-warning": "69420",
       });
-
+  
+      // Verificar si la respuesta fue exitosa (status 200)
+      if (!response.ok) {
+        throw new Error('Correo no Encontrado.');
+      }
+  
       const data = await response.json(); // Parsear la respuesta JSON
-
-      // Verificar si la respuesta fue exitosa
-      if (response.code === 404) {
+  
+      // Verificar si la respuesta contiene los datos esperados
+      if (data.code === 200 && data.message === "System user found") {
+        // Si el usuario fue encontrado, retornar true
+        return true; // Usuario encontrado
+      }
+  
+      // Si la respuesta tiene un código diferente o no se encuentra el usuario
+      if (data.code === 404) {
         throw new Error('El correo no está registrado.');
       }
-
-      if (response.code === 200 && data.message === "System user found") {
-        // Si el código de respuesta es 200 y se encontró el usuario
-        return true;  // Usuario encontrado
-      }
-
-      // Si la respuesta es inesperada o tiene un código diferente a 200 o 404
-      throw new Error(data.message || 'Error al verificar el correo.');
-
+  
+      throw new Error(data.message || 'Error inesperado.');
+  
     } catch (error) {
       console.error('Error al verificar el correo:', error);
       setError(error.message); // Mostrar el mensaje de error en la UI
