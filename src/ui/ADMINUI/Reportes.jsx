@@ -3,12 +3,10 @@ import Sidebar from '../../components/generic/Sidebar';
 import ReporteCard from '../../components/AdminUI/Reportes/ReporteCard';
 import API_BASE_URL from '../../js/urlHelper';
 import LoadingScreen from '../../components/home/LoadingScreen';
-import ReporteModal from '../../components/AdminUI/Reportes/ReporteModal';  // Importa el modal
 
 function Reportes() {
   const [reportes, setReportes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedReporte, setSelectedReporte] = useState(null);  // Estado para el reporte seleccionado
 
   // Función para obtener los reportes desde la API
   const fetchReports = async () => {
@@ -32,16 +30,6 @@ function Reportes() {
     fetchReports();
   }, []);
 
-  // Función para abrir el modal con un reporte
-  const openModal = (reporte) => {
-    setSelectedReporte(reporte);
-  };
-
-  // Función para cerrar el modal
-  const closeModal = () => {
-    setSelectedReporte(null);
-  };
-
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -54,16 +42,9 @@ function Reportes() {
         {/* Contenedor de los reportes */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {reportes.map((reporte) => (
-            <div key={reporte.id} onClick={() => openModal(reporte)}>
-              <ReporteCard reporte={reporte} />
-            </div>
+            <ReporteCard key={reporte.id} reporte={reporte} />
           ))}
         </div>
-
-        {/* Mostrar el modal si hay un reporte seleccionado */}
-        {selectedReporte && (
-          <ReporteModal reporte={selectedReporte} closeModal={closeModal} />
-        )}
       </div>
     </div>
   );
