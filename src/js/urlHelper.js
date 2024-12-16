@@ -1,4 +1,4 @@
 // src/js/urlHelper.js
-const API_BASE_URL = 'https://deciding-sacred-antelope.ngrok-free.app'; // Cambia esta URL si es necesario
+const API_BASE_URL = 'https://wednesday-ship-chances-mesh.trycloudflare.com/'; // Cambia esta URL si es necesario
 
 export default API_BASE_URL;

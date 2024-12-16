@@ -23,7 +23,7 @@ function Login() {
   const verifyEmailExistence = async (email) => {
     try {
       // Crear los parámetros de la URL con URLSearchParams
-      const url = new URL(`${API_BASE_URL}/api/v1/systemUsers/findByEmail`);
+      const url = new URL(`${API_BASE_URL}api/v1/systemUsers/findByEmail`);
       url.search = new URLSearchParams({ email }).toString(); // Agregar el parámetro email a la URL
 
       // Realizar la solicitud GET con la URL que contiene los parámetros
