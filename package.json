@@ -6,6 +6,7 @@
     "autoprefixer": "^10.4.20",
     "cra-template": "1.2.0",
     "ecoruta_front_react_admin": "file:",
+    "firebase": "^11.1.0",
     "framer-motion": "^11.15.0",
     "postcss": "^8.4.49",
     "react": "^19.0.0",

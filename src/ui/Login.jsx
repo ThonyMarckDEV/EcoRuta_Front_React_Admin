@@ -5,6 +5,8 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import LoadingScreen from '../components/home/LoadingScreen'; // Importa el componente LoadingScreen
 import ecorutalogo from '../img/ECORUTALOGO.jpeg';
 import { motion } from "framer-motion";  // Importamos Framer Motion
+import { signInWithEmailAndPassword } from "firebase/auth";  // Importamos la función para login
+import { auth } from '../js/firebase';  // Importamos la configuración de Firebase
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -24,28 +26,15 @@ function Login() {
     setLoading(true); // Mostrar la pantalla de carga
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          correo: email,
-          password,
-        }),
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-      const result = await response.json();
+      // Si el login es exitoso, redirigimos a la página principal
+      console.log(userCredential.user); // Imprimir el usuario autenticado
+      window.location.href = '/adminUI'; // Redirigir a la página principal
 
-      if (response.ok) {
-       // localStorage.setItem('jwt', result.token);
-        window.location.href = '/adminUI'; // Redirigir a la página principal
-      } else {
-        setError(result.error || 'Hubo un error al iniciar sesión.');
-      }
-    } catch (error) {
-      setError('Error en la conexión con el servidor.');
-      console.error('Error al intentar iniciar sesión:', error);
+    } catch (err) {
+      setError(err.message || 'Hubo un error al iniciar sesión.');
+      console.error('Error al intentar iniciar sesión:', err);
     } finally {
       setLoading(false); // Ocultar la pantalla de carga después de completar la solicitud
     }
@@ -83,6 +72,7 @@ function Login() {
               />
             </div>
     
+            {/* Input de contraseña */}
             <div className="mb-6 relative">
               <label htmlFor="password" className="block text-sm font-medium text-gray-600">
                 Contraseña
