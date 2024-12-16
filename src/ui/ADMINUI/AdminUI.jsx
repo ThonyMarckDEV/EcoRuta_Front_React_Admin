@@ -6,9 +6,9 @@ function AdminUI() {
   const handleLogout = async () => {
     try {
       await signOut(auth);  // Desloguea al usuario
-      console.log("Usuario deslogueado");
       // Aquí puedes redirigir a la página de inicio de sesión o realizar alguna acción
       window.location.href = '/'; // Redirige a la página de inicio
+      console.log("Usuario deslogueado");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
     }

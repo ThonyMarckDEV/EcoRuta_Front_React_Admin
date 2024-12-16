@@ -1,43 +1,82 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import API_BASE_URL from '../js/urlHelper';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../js/firebase'; // Asegúrate de tener la configuración de Firebase
+import API_BASE_URL from '../js/urlHelper'; // Importa la URL de tu API
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import LoadingScreen from '../components/home/LoadingScreen'; // Importa el componente LoadingScreen
-import ecorutalogo from '../img/ECORUTALOGO.jpeg';
-import { motion } from "framer-motion";  // Importamos Framer Motion
-import { signInWithEmailAndPassword } from "firebase/auth";  // Importamos la función para login
-import { auth } from '../js/firebase';  // Importamos la configuración de Firebase
+import LoadingScreen from '../components/home/LoadingScreen'; // Componente LoadingScreen
+import ecorutalogo from '../img/ECORUTALOGO.jpeg'; // Logo de la empresa
+import { motion } from 'framer-motion'; // Importa Framer Motion
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // Estado para controlar la carga
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Función para alternar la visibilidad de la contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  // Verificar si el correo existe en el backend usando parámetros de consulta
+  const verifyEmailExistence = async (email) => {
+    try {
+      // Crear los parámetros de la URL con URLSearchParams
+      const url = new URL(`${API_BASE_URL}/api/v1/systemUsers/findByEmail`);
+      url.search = new URLSearchParams({ email }).toString(); // Agregar el parámetro email a la URL
+
+      // Realizar la solicitud GET con la URL que contiene los parámetros
+      const response = await fetch(url, {
+        method: 'GET',
+        "ngrok-skip-browser-warning": "69420",
+      });
+
+      const data = await response.json(); // Parsear la respuesta JSON
+
+      // Verificar si la respuesta fue exitosa
+      if (response.code === 404) {
+        throw new Error('El correo no está registrado.');
+      }
+
+      if (response.code === 200 && data.message === "System user found") {
+        // Si el código de respuesta es 200 y se encontró el usuario
+        return true;  // Usuario encontrado
+      }
+
+      // Si la respuesta es inesperada o tiene un código diferente a 200 o 404
+      throw new Error(data.message || 'Error al verificar el correo.');
+
+    } catch (error) {
+      console.error('Error al verificar el correo:', error);
+      setError(error.message); // Mostrar el mensaje de error en la UI
+      return false; // Devolver false si hay algún error
+    }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-    setLoading(true); // Mostrar la pantalla de carga
+    setLoading(true);
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    // Verificar primero si el correo existe en el backend
+    const emailExists = await verifyEmailExistence(email);
 
-      // Si el login es exitoso, redirigimos a la página principal
-      console.log(userCredential.user); // Imprimir el usuario autenticado
-      window.location.href = '/adminUI'; // Redirigir a la página principal
+    if (emailExists) {
+      try {
+        // Si el correo existe, intentar loguearse con Firebase
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-    } catch (err) {
-      setError(err.message || 'Hubo un error al iniciar sesión.');
-      console.error('Error al intentar iniciar sesión:', err);
-    } finally {
-      setLoading(false); // Ocultar la pantalla de carga después de completar la solicitud
+        // Si el login es exitoso, redirigir a la página principal
+        console.log(userCredential.user); // Imprimir el usuario autenticado
+        window.location.href = '/adminUI'; // Redirigir a la página principal
+      } catch (error) {
+        setError('Credenciales incorrectas.'); // Manejar error de login en Firebase
+        console.error('Error al intentar iniciar sesión:', error.message);
+      }
     }
+
+    setLoading(false); // Dejar de mostrar carga
   };
 
   return (
@@ -52,7 +91,7 @@ function Login() {
         </div>
     
         <div className="w-full sm:w-1/2 h-full flex flex-col justify-center">
-          {loading && <LoadingScreen />}
+          {loading && <LoadingScreen />} {/* Pantalla de carga */}
     
           <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Iniciar sesión</h2>
     
@@ -68,15 +107,13 @@ function Login() {
                 placeholder="Escribe tu correo"
                 required
                 className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                whileFocus={{ borderColor: "#34d399" }}
+                whileFocus={{ borderColor: "#34d399" }} // Animación de borde verde al hacer foco
               />
             </div>
     
             {/* Input de contraseña */}
             <div className="mb-6 relative">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                Contraseña
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-600">Contraseña</label>
               <div className="relative">
                 <motion.input
                   id="password"
@@ -86,7 +123,7 @@ function Login() {
                   placeholder="Escribe tu contraseña"
                   required
                   className="w-full p-4 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-16 appearance-none transition-all duration-300"
-                  whileFocus={{ borderColor: "#34d399" }} // Animación de color verde al hacer foco
+                  whileFocus={{ borderColor: "#34d399" }} // Animación de borde verde al hacer foco
                 />
                 <button
                   type="button"
@@ -102,7 +139,7 @@ function Login() {
             <motion.button
               type="submit"
               className="w-full py-3 bg-green-600 text-white rounded-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-              whileHover={{ scale: 1.05 }} // Escala el botón al hacer hover
+              whileHover={{ scale: 1.05 }} // Efecto de escala al pasar el mouse
             >
               Iniciar sesión
             </motion.button>
@@ -114,6 +151,6 @@ function Login() {
       </div>
     </div>
   );
-};
+}
 
 export default Login;
