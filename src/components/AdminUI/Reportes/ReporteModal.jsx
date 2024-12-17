@@ -48,6 +48,10 @@ function ReporteModal({ reporte, closeModal }) {
     try {
       const response = await fetch(`${API_BASE_URL}api/v1/reports/${reporte.id}/updateStatus?status=${status}`, {
         method: 'PUT', // o 'POST' dependiendo de la API
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+          "bypass-tunnel-reminder": "true" // Encabezado personalizado
+        }
       });
 
       if (!response.ok) {

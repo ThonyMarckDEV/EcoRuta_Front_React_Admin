@@ -14,9 +14,15 @@ function Reportes() {
   // Función para obtener los reportes desde la API
   const fetchReports = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}api/v1/reports/listAll`);
+      const response = await fetch(`${API_BASE_URL}api/v1/reports/listAll`, {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+          "bypass-tunnel-reminder": "true" // Encabezado personalizado
+        }
+      });
+    
       const data = await response.json();
-
+    
       if (data.code === 200) {
         setReportes(data.data);
       } else {

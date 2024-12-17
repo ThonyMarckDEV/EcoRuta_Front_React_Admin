@@ -28,6 +28,10 @@ function Login() {
       // Realizar la solicitud GET con la URL que contiene los parámetros
       const response = await fetch(url, {
         method: 'GET',
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+          "bypass-tunnel-reminder": "true" // O usa un encabezado personalizado
+        }
       });
   
       // Verificar si la respuesta fue exitosa (status 200)
